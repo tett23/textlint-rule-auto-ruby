@@ -4,8 +4,7 @@
     "sourceType": "module",
     "allowImportExportEverywhere": true,
     "ecmaFeatures": {
-       "experimentalObjectRestSpread": true,
-       "jsx": true
+       "experimentalObjectRestSpread": true
     },
   },
   "extends": "airbnb",
@@ -60,12 +59,6 @@
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
     "promise/no-native": "off",
-    "react/sort-comp": ["error", {
-      "order": ["type-annotations", "static-methods", "lifecycle", "everything-else", "render"]
-    }],
-    "react/jsx-no-bind": "off",
-    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
-    "react/prefer-stateless-function": "off",
     "max-len": ["error", 150]
   },
   "plugins": [
@@ -73,8 +66,7 @@
     "flowtype-errors",
     "import",
     "promise",
-    "compat",
-    "react"
+    "compat"
   ],
   "settings": {
     "import/resolver": {

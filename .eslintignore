@@ -49,3 +49,5 @@ dll
 .idea
 npm-debug.log.*
 __snapshots__
+
+lib/*
