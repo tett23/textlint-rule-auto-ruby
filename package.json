@@ -1,0 +1,6 @@
+{
+  "name": "textlint-rule-auto-ruby",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT"
+}
