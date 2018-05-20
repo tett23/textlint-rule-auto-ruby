@@ -1,0 +1,86 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "ecmaFeatures": {
+       "experimentalObjectRestSpread": true,
+       "jsx": true
+    },
+  },
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "arrow-parens": ["off"],
+    "arrow-body-style": ["off"],
+    "compat/compat": "error",
+    "consistent-return": "off",
+    "comma-dangle": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-vars": ["error", { "varsIgnorePattern": "_+", "argsIgnorePattern": "_+" }],
+    "no-await-in-loop": "off",
+    "no-cond-assign": ["error", "except-parens"],
+    "prefer-destructuring": ["error", {
+      "VariableDeclarator": {
+        "array": false,
+        "object": false
+      },
+      "AssignmentExpression": {
+        "array": true,
+        "object": false
+      }
+    }, {
+      "enforceForRenamedProperties": false
+    }],
+    "no-continue": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-named-as-default": "off",
+    "flowtype-errors/show-errors": "error",
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1,
+    "flowtype/no-weak-types": [2, {
+        "any": true,
+        "Object": false,
+        "Function": true
+    }],
+    "generator-star-spacing": "off",
+    "import/no-unresolved": "error",
+    "import/no-extraneous-dependencies": "off",
+    "no-console": "off",
+    "no-use-before-define": "off",
+    "no-multi-assign": "off",
+    "promise/param-names": "error",
+    "promise/always-return": "error",
+    "promise/catch-or-return": "error",
+    "promise/no-native": "off",
+    "react/sort-comp": ["error", {
+      "order": ["type-annotations", "static-methods", "lifecycle", "everything-else", "render"]
+    }],
+    "react/jsx-no-bind": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
+    "react/prefer-stateless-function": "off",
+    "max-len": ["error", 150]
+  },
+  "plugins": [
+    "flowtype",
+    "flowtype-errors",
+    "import",
+    "promise",
+    "compat",
+    "react"
+  ],
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.eslint.js"
+      }
+    }
+  }
+}
