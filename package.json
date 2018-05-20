@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "textlint-scripts build",
+    "flow": "flow",
+    "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
+    "test": "NODE_ENV=test jest"
+  },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.1",
@@ -14,6 +20,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-classes": "^6.24.1",
     "babel-preset-env": "^1.5.1",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.24.1",
     "eslint": "^4.17.0",
@@ -37,5 +44,8 @@
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",
     "webpack-merge": "^4.1.1"
+  },
+  "dependencies": {
+    "js-yaml": "^3.11.0"
   }
 }
