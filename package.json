@@ -1,13 +1,20 @@
 {
   "name": "textlint-rule-auto-ruby",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "license": "MIT",
   "scripts": {
-    "build": "textlint-scripts build",
+    "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
+    "watch": "babel src --out-dir lib --watch --source-maps",
     "flow": "flow",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
-    "test": "NODE_ENV=test jest"
+    "test-run": "NODE_ENV=test textlint --rulesdir ./ --plugin auto-ruby test_text.txt",
+    "test": "NODE_ENV=test jest",
+    "test-watch": "NODE_ENV=test jest --watch"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

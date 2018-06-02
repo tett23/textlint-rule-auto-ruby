@@ -1,31 +1,29 @@
 // @flow
 
 export type RuleTypes = 'all_types' | 'file' | 'paragraph' | 'first' | 'off'
-export type ConvertTypes = 'simple' | 'complex'
-export type ConvertTypesType = {
+export type FormatTypesType = {
   [string]: string
 }
 
 export type GlobalType = {
+  message: string,
   rule: RuleTypes,
-  fubyFormat: ConvertTypes,
+  format: string,
 }
 
-export type ConvertFormats= {
+export type Formats = {
   [string]: string
 }
 
-export type RuleItem = {|
+export type RuleItem = {
   text: string,
   ruby: string,
   rule: ?RuleTypes,
-  convert: ?ConvertTypes
-|}
+  format: ?string
+}
 
-export type RuleType = RuleItem[]
-
-export type Config = {|
+export type Config = {
   global: GlobalType,
-  convertFormats: ConvertFormats,
-  rules: RuleType[],
-|}
+  formats: Formats,
+  rules: RuleItem[],
+}
