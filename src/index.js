@@ -4,20 +4,18 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import type { Config, RuleItem, RuleTypes } from './types';
 
-let config:Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../config/rules.yml`, 'utf8'));
+let config: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../config/rules.yml`, 'utf8'));
 
 // eslint-disable-next-line flowtype/no-weak-types
-function reporter(context:any, options:any = {}) {
+function reporter(context: any, options: any = {}) {
   config = Object.assign({}, config, options);
-  const baseRule: {rule: ?RuleTypes, format: ?string} = {
+  const baseRule: { rule: ?RuleTypes, format: ?string } = {
     rule: config.global.rule,
-    format: config.global.format
+    format: config.global.format,
   };
 
   // console.log('options', options);
-  const {
-    Syntax, report, getSource,
-  } = context;
+  const { Syntax, report, getSource } = context;
 
   // console.log('context', context);
   // console.log('options', options);
@@ -46,8 +44,8 @@ type Change = {|
   offset: number,
   actual: string,
   expected: string,
-  message: string
-|}
+  message: string,
+|};
 
 function changes(text: string, rules: RuleItem[]): Change[] {
   const ret = rules.reduce((r, rule) => {
@@ -64,7 +62,7 @@ function changes(text: string, rules: RuleItem[]): Change[] {
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
-type RuleError = any
+type RuleError = any;
 
 // eslint-disable-next-line flowtype/no-weak-types
 function applyChanges(text: string, changeItems: Change[], context: any): RuleError[] {
@@ -72,30 +70,30 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
   const { RuleError, fixer } = context;
 
   let delta = 0;
-  const ret = changeItems.map(({
-    index, offset, actual, expected, message
-  }) => {
-    if (actual === expected) {
-      return null;
-    }
+  const ret = changeItems
+    .map(({ index, offset, actual, expected, message }) => {
+      if (actual === expected) {
+        return null;
+      }
 
-    // const matchStartIndex = diff.index;
-    // const matchEndIndex = matchStartIndex + diff.matches[0].length;
-    // // actual => expected
-    // const rep = text.slice(index + delta, index + delta + actual.length);
-    // console.log('rep', rep);
+      // const matchStartIndex = diff.index;
+      // const matchEndIndex = matchStartIndex + diff.matches[0].length;
+      // // actual => expected
+      // const rep = text.slice(index + delta, index + delta + actual.length);
+      // console.log('rep', rep);
 
-    const replaceTo = fixer.replaceTextRange([index, index + offset], expected);
+      const replaceTo = fixer.replaceTextRange([index, index + offset], expected);
 
-    // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
-    // console.log('text', text);
-    delta += expected.length - actual.length;
+      // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
+      // console.log('text', text);
+      delta += expected.length - actual.length;
 
-    return new RuleError(message, {
-      index,
-      fix: replaceTo
-    });
-  }).filter(Boolean);
+      return new RuleError(message, {
+        index,
+        fix: replaceTo,
+      });
+    })
+    .filter(Boolean);
 
   return ret;
 }
@@ -122,13 +120,13 @@ function matchAll(text: string, rule: RuleItem): Change[] {
       offset: rule.text.length,
       actual: rule.text,
       expected: fix,
-      message: `auto-ruby: ${rule.text} => ${fix}`
+      message: `auto-ruby: ${rule.text} => ${fix}`,
     };
   });
 }
 
 function fixString(base: string, rule: RuleItem) {
-  const format:?string = config.formats[rule.format || 'default'];
+  const format: ?string = config.formats[rule.format || 'default'];
   if (format == null) {
     throw new Error('');
   }
@@ -139,5 +137,5 @@ function fixString(base: string, rule: RuleItem) {
 
 module.exports = {
   linter: reporter,
-  fixer: reporter
+  fixer: reporter,
 };

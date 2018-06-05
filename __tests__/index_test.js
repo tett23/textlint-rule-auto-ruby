@@ -6,15 +6,13 @@ import TextLintTester from 'textlint-tester';
 import rule from '../src/index';
 import type { Config } from '../src/types';
 
-const options:Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yml`, 'utf8'));
+const options: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yml`, 'utf8'));
 
 const tester = new TextLintTester();
 
 // ruleName, rule, { valid, invalid }
 tester.run('rule', rule, {
-  valid: [
-    'text',
-  ],
+  valid: ['text'],
 
   invalid: [
     {
@@ -25,9 +23,9 @@ tester.run('rule', rule, {
         {
           message: 'auto-ruby: foo => foo(bar)',
           line: 1,
-          column: 1
-        }
-      ]
+          column: 1,
+        },
+      ],
     },
     {
       text: 'hoge',
@@ -37,9 +35,9 @@ tester.run('rule', rule, {
         {
           message: 'auto-ruby: hoge => hoge(fuga)',
           line: 1,
-          column: 1
-        }
-      ]
+          column: 1,
+        },
+      ],
     },
     {
       text: 'foo, foo',
@@ -49,14 +47,14 @@ tester.run('rule', rule, {
         {
           message: 'auto-ruby: foo => foo(bar)',
           line: 1,
-          column: 1
+          column: 1,
         },
         {
           message: 'auto-ruby: foo => foo(bar)',
           line: 1,
-          column: 6
+          column: 6,
         },
-      ]
+      ],
     },
     {
       text: 'foo, hoge',
@@ -66,14 +64,14 @@ tester.run('rule', rule, {
         {
           message: 'auto-ruby: foo => foo(bar)',
           line: 1,
-          column: 1
+          column: 1,
         },
         {
           message: 'auto-ruby: hoge => hoge(fuga)',
           line: 1,
-          column: 6
+          column: 6,
         },
-      ]
+      ],
     },
-  ]
+  ],
 });
