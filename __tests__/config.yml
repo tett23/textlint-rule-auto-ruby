@@ -14,3 +14,8 @@ rules:
     ruby: bar
     rule: all_files
     format: default
+  -
+    text: hoge
+    ruby: fuga
+    rule: all_files
+    format: default

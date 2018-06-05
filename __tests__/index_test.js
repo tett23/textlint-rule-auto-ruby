@@ -23,10 +23,56 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'hogehoge',
+          message: 'auto-ruby: foo => foo(bar)',
           line: 1,
           column: 1
         }
+      ]
+    },
+    {
+      text: 'hoge',
+      output: 'hoge(fuga)',
+      options,
+      errors: [
+        {
+          message: 'auto-ruby: hoge => hoge(fuga)',
+          line: 1,
+          column: 1
+        }
+      ]
+    },
+    {
+      text: 'foo, foo',
+      output: 'foo(bar), foo(bar)',
+      options,
+      errors: [
+        {
+          message: 'auto-ruby: foo => foo(bar)',
+          line: 1,
+          column: 1
+        },
+        {
+          message: 'auto-ruby: foo => foo(bar)',
+          line: 1,
+          column: 6
+        },
+      ]
+    },
+    {
+      text: 'foo, hoge',
+      output: 'foo(bar), hoge(fuga)',
+      options,
+      errors: [
+        {
+          message: 'auto-ruby: foo => foo(bar)',
+          line: 1,
+          column: 1
+        },
+        {
+          message: 'auto-ruby: hoge => hoge(fuga)',
+          line: 1,
+          column: 6
+        },
       ]
     },
   ]

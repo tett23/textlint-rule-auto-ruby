@@ -16,7 +16,7 @@ function reporter(context:any, options:any = {}) {
 
   // console.log('options', options);
   const {
-    Syntax, RuleError, report, getSource, fixer
+    Syntax, report, getSource,
   } = context;
 
   // console.log('context', context);
@@ -28,27 +28,103 @@ function reporter(context:any, options:any = {}) {
   return {
     [Syntax.Str](node) {
       const text = getSource(node);
-      // console.log('doc node', node, text);
+      // console.log('doc node', node);
       // console.log('doc text', text);
 
-      config.rules.forEach((rule, index) => {
-        const merged: RuleItem = Object.assign({}, baseRule, rule);
-        const fix = fixString(text, merged);
-        const match = text.match(rule.text);
-        if (!match) {
-          return;
-        }
-
-        const replaceTo = fixer.replaceTextRange([match.index, rule.text.length], fix);
-        const ruleError = new RuleError(config.global.message, {
-          index,
-          fix: replaceTo
-        });
-
+      const rules = config.rules.map((rule) => {
+        return Object.assign({}, baseRule, rule);
+      });
+      applyChanges(text, changes(text, rules), context).forEach((ruleError) => {
         report(node, ruleError);
       });
     },
   };
+}
+
+type Change = {|
+  index: number,
+  offset: number,
+  actual: string,
+  expected: string,
+  message: string
+|}
+
+function changes(text: string, rules: RuleItem[]): Change[] {
+  const ret = rules.reduce((r, rule) => {
+    matchAll(text, rule).forEach((item) => {
+      r.push(item);
+    });
+
+    return r;
+  }, []);
+
+  return ret.sort((a, b) => {
+    return a.index - b.index;
+  });
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+type RuleError = any
+
+// eslint-disable-next-line flowtype/no-weak-types
+function applyChanges(text: string, changeItems: Change[], context: any): RuleError[] {
+  // eslint-disable-next-line no-shadow
+  const { RuleError, fixer } = context;
+
+  let delta = 0;
+  const ret = changeItems.map(({
+    index, offset, actual, expected, message
+  }) => {
+    if (actual === expected) {
+      return null;
+    }
+
+    // const matchStartIndex = diff.index;
+    // const matchEndIndex = matchStartIndex + diff.matches[0].length;
+    // // actual => expected
+    // const rep = text.slice(index + delta, index + delta + actual.length);
+    // console.log('rep', rep);
+
+    const replaceTo = fixer.replaceTextRange([index, index + offset], expected);
+
+    // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
+    // console.log('text', text);
+    delta += expected.length - actual.length;
+
+    return new RuleError(message, {
+      index,
+      fix: replaceTo
+    });
+  }).filter(Boolean);
+
+  return ret;
+}
+
+function matchAll(text: string, rule: RuleItem): Change[] {
+  const fix = fixString(rule.text, rule);
+  const matchIndices = [];
+  let offset = 0;
+  let index = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    index = text.indexOf(rule.text, offset);
+    if (index === -1) {
+      break;
+    }
+
+    matchIndices.push(index);
+    offset = index + 1;
+  }
+
+  return matchIndices.map((i) => {
+    return {
+      index: i,
+      offset: rule.text.length,
+      actual: rule.text,
+      expected: fix,
+      message: `auto-ruby: ${rule.text} => ${fix}`
+    };
+  });
 }
 
 function fixString(base: string, rule: RuleItem) {
