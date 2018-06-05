@@ -7,7 +7,10 @@
        "experimentalObjectRestSpread": true
     },
   },
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
   "env": {
     "browser": true,
     "es6": true,
@@ -59,14 +62,24 @@
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
     "promise/no-native": "off",
-    "max-len": ["error", 150]
+    "max-len": ["error", 150],
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 120,
+        "singleQuote": true,
+        "trailingComma": "all",
+        "arrowParens": "always"
+      }
+    ]
   },
   "plugins": [
     "flowtype",
     "flowtype-errors",
     "import",
     "promise",
-    "compat"
+    "compat",
+    "prettier"
   ],
   "settings": {
     "import/resolver": {
