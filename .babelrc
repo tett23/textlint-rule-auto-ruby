@@ -7,7 +7,7 @@
     "stage-0",
     "flow"
   ],
-  "plugins": ["add-module-exports", "dynamic-import-webpack"],
+  "plugins": ["add-module-exports"],
   "env": {
     "production": {
       "plugins": ["babel-plugin-dev-expression"]

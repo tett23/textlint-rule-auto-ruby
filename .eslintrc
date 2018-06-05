@@ -80,12 +80,5 @@
     "promise",
     "compat",
     "prettier"
-  ],
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "webpack.config.eslint.js"
-      }
-    }
-  }
+  ]
 }
