@@ -5,7 +5,7 @@
     "allowImportExportEverywhere": true,
     "ecmaFeatures": {
        "experimentalObjectRestSpread": true
-    },
+    }
   },
   "extends": [
     "airbnb",
