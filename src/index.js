@@ -13,24 +13,15 @@ function reporter(context: any, options: any = {}) {
     rule: config.global.rule,
     format: config.global.format,
   };
-
-  // console.log('options', options);
-  const { Syntax, report, getSource } = context;
-
-  // console.log('context', context);
-  // console.log('options', options);
-  // console.log(Syntax, RuleError, report, getSource, fixer);
-
-  // console.log('Syntax', Syntax);
   const rules = config.rules.map((rule) => {
     return Object.assign({}, baseRule, rule);
   });
 
+  const { Syntax, report, getSource } = context;
+
   return {
     [Syntax.Document](node) {
       const text = getSource(node);
-      // console.log('doc node', node);
-      // console.log('doc text', text);
 
       applyChanges(text, changes(text, rules), context).forEach((ruleError) => {
         report(node, ruleError);
@@ -67,25 +58,14 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
   // eslint-disable-next-line no-shadow
   const { RuleError, fixer } = context;
 
-  // let delta = 0;
   const ret = changeItems
     .map(({ index, actual, expected }) => {
       if (actual === expected) {
         return null;
       }
 
-      // const matchStartIndex = diff.index;
-      // const matchEndIndex = matchStartIndex + diff.matches[0].length;
-      // // actual => expected
-      // const rep = text.slice(index + delta, index + delta + actual.length);
-      // console.log('rep', rep);
-
       const replaceTo = fixer.replaceTextRange([index, index + actual.length], expected);
 
-      // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
-      // console.log('text', text);
-      // delta += expected.length - actual.length;
-      //
       const message = `auto-ruby: \`${actual}\` => \`${expected}\``;
 
       return new RuleError(message, {
