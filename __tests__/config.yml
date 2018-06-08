@@ -12,10 +12,10 @@ rules:
   -
     text: foo
     ruby: bar
-    rule: all_files
+    rule: all
     format: default
   -
     text: hoge
     ruby: fuga
-    rule: all_files
+    rule: all
     format: default

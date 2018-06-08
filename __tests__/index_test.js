@@ -73,5 +73,17 @@ tester.run('rule', rule, {
         },
       ],
     },
+    {
+      text: 'foo, foo(bar)',
+      output: 'foo(bar), foo(bar)',
+      options,
+      errors: [
+        {
+          message: 'auto-ruby: foo => foo(bar)',
+          line: 1,
+          column: 1,
+        },
+      ],
+    },
   ],
 });

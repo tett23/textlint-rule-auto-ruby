@@ -22,16 +22,16 @@ function reporter(context: any, options: any = {}) {
   // console.log(Syntax, RuleError, report, getSource, fixer);
 
   // console.log('Syntax', Syntax);
+  const rules = config.rules.map((rule) => {
+    return Object.assign({}, baseRule, rule);
+  });
 
   return {
-    [Syntax.Str](node) {
+    [Syntax.Document](node) {
       const text = getSource(node);
       // console.log('doc node', node);
       // console.log('doc text', text);
 
-      const rules = config.rules.map((rule) => {
-        return Object.assign({}, baseRule, rule);
-      });
       applyChanges(text, changes(text, rules), context).forEach((ruleError) => {
         report(node, ruleError);
       });
@@ -69,7 +69,7 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
   // eslint-disable-next-line no-shadow
   const { RuleError, fixer } = context;
 
-  let delta = 0;
+  // let delta = 0;
   const ret = changeItems
     .map(({ index, offset, actual, expected, message }) => {
       if (actual === expected) {
@@ -86,7 +86,7 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
 
       // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
       // console.log('text', text);
-      delta += expected.length - actual.length;
+      // delta += expected.length - actual.length;
 
       return new RuleError(message, {
         index,
@@ -99,6 +99,19 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
 }
 
 function matchAll(text: string, rule: RuleItem): Change[] {
+  switch (rule.rule) {
+    case 'first':
+      return ruleFirst(text, rule);
+    case 'all':
+      return ruleAll(text, rule);
+    case 'off':
+      return [];
+    default:
+      throw new Error(`Unexpected rule type '${rule.rule || ''}'`);
+  }
+}
+
+function ruleFirst(text: string, rule: RuleItem): Change[] {
   const fix = fixString(rule.text, rule);
   const matchIndices = [];
   let offset = 0;
@@ -125,7 +138,28 @@ function matchAll(text: string, rule: RuleItem): Change[] {
   });
 }
 
-function fixString(base: string, rule: RuleItem) {
+function ruleAll(text: string, rule: RuleItem): Change[] {
+  const re = rubyRegExp(rule);
+  const matchIndices = [];
+  let match;
+  // eslint-disable-next-line no-constant-condition
+  while ((match = re.exec(text))) {
+    matchIndices.push(match.index);
+  }
+
+  const fix = fixString(rule.text, rule);
+  return matchIndices.map((index) => {
+    return {
+      index,
+      offset: rule.text.length,
+      actual: rule.text,
+      expected: fix,
+      message: `auto-ruby: ${rule.text} => ${fix}`,
+    };
+  });
+}
+
+function fixString(base: string, rule: RuleItem): string {
   const format: ?string = config.formats[rule.format || 'default'];
   if (format == null) {
     throw new Error('');
@@ -133,6 +167,32 @@ function fixString(base: string, rule: RuleItem) {
 
   const replace = format.replace(':base:', rule.text).replace(':ruby:', rule.ruby);
   return base.replace(rule.text, replace);
+}
+
+function rubyRegExp(rule: RuleItem): RegExp {
+  const format: ?string = config.formats[rule.format || 'default'];
+  if (format == null) {
+    throw new Error('');
+  }
+
+  let str = '';
+  const [front, rear] = format.replace(':ruby:', rule.ruby).split(':base:');
+  if (front !== '') {
+    str += `(?<!${escapeRegExp(front)})`;
+  }
+  str += rule.text;
+  if (rear !== '') {
+    str += `(?!${escapeRegExp(rear)})`;
+  }
+
+  console.log(str);
+  return new RegExp(str, 'g');
+}
+
+function escapeRegExp(str: string): string {
+  const matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+
+  return str.replace(matchOperatorsRe, '\\$&');
 }
 
 module.exports = {

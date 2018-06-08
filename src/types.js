@@ -1,6 +1,6 @@
 // @flow
 
-export type RuleTypes = 'all_types' | 'file' | 'paragraph' | 'first' | 'off';
+export type RuleTypes = 'all' | 'file' | 'paragraph' | 'first' | 'off';
 export type FormatTypesType = {
   [string]: string,
 };
