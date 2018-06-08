@@ -41,10 +41,8 @@ function reporter(context: any, options: any = {}) {
 
 type Change = {|
   index: number,
-  offset: number,
   actual: string,
   expected: string,
-  message: string,
 |};
 
 function changes(text: string, rules: RuleItem[]): Change[] {
@@ -71,7 +69,7 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
 
   // let delta = 0;
   const ret = changeItems
-    .map(({ index, offset, actual, expected, message }) => {
+    .map(({ index, actual, expected }) => {
       if (actual === expected) {
         return null;
       }
@@ -82,11 +80,13 @@ function applyChanges(text: string, changeItems: Change[], context: any): RuleEr
       // const rep = text.slice(index + delta, index + delta + actual.length);
       // console.log('rep', rep);
 
-      const replaceTo = fixer.replaceTextRange([index, index + offset], expected);
+      const replaceTo = fixer.replaceTextRange([index, index + actual.length], expected);
 
       // text = text.slice(0, index + delta) + expected + text.slice(index + delta + actual.length);
       // console.log('text', text);
       // delta += expected.length - actual.length;
+      //
+      const message = `auto-ruby: \`${actual}\` => \`${expected}\``;
 
       return new RuleError(message, {
         index,
@@ -123,10 +123,8 @@ function ruleFirst(text: string, rule: RuleItem): Change[] {
   const ret = matchIndices.map((index) => {
     return {
       index,
-      offset: fix.length,
       actual: fix,
       expected: rule.text,
-      message: `auto-ruby: ${fix} => ${rule.text}`,
     };
   });
 
@@ -134,10 +132,8 @@ function ruleFirst(text: string, rule: RuleItem): Change[] {
   if (match) {
     ret.push({
       index: match.index,
-      offset: rule.text.length,
       actual: rule.text,
       expected: fix,
-      message: `auto-ruby: ${rule.text} => ${fix}`,
     });
   }
 
@@ -156,10 +152,8 @@ function ruleAll(text: string, rule: RuleItem): Change[] {
   return matchIndices.map((index) => {
     return {
       index,
-      offset: rule.text.length,
       actual: rule.text,
       expected: fix,
-      message: `auto-ruby: ${rule.text} => ${fix}`,
     };
   });
 }

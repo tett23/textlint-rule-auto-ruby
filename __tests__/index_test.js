@@ -21,7 +21,7 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 1,
         },
@@ -33,7 +33,7 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'auto-ruby: hoge => hoge(fuga)',
+          message: 'auto-ruby: `hoge` => `hoge(fuga)`',
           line: 1,
           column: 1,
         },
@@ -45,12 +45,12 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 1,
         },
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 6,
         },
@@ -62,12 +62,12 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 1,
         },
         {
-          message: 'auto-ruby: hoge => hoge(fuga)',
+          message: 'auto-ruby: `hoge` => `hoge(fuga)`',
           line: 1,
           column: 6,
         },
@@ -79,7 +79,7 @@ tester.run('rule', rule, {
       options,
       errors: [
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 1,
         },
@@ -101,12 +101,12 @@ tester.run('rule', rule, {
       }),
       errors: [
         {
-          message: 'auto-ruby: foo => foo(bar)',
+          message: 'auto-ruby: `foo` => `foo(bar)`',
           line: 1,
           column: 1,
         },
         {
-          message: 'auto-ruby: foo(bar) => foo',
+          message: 'auto-ruby: `foo(bar)` => `foo`',
           line: 1,
           column: 6,
         },
