@@ -112,42 +112,47 @@ function matchAll(text: string, rule: RuleItem): Change[] {
 }
 
 function ruleFirst(text: string, rule: RuleItem): Change[] {
-  const fix = fixString(rule.text, rule);
   const matchIndices = [];
-  let offset = 0;
-  let index = 0;
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    index = text.indexOf(rule.text, offset);
-    if (index === -1) {
-      break;
-    }
-
-    matchIndices.push(index);
-    offset = index + 1;
+  const fix = fixString(rule);
+  const re = new RegExp(escapeRegExp(fix), 'g');
+  let match;
+  while ((match = re.exec(text))) {
+    matchIndices.push(match.index);
   }
 
-  return matchIndices.map((i) => {
+  const ret = matchIndices.map((index) => {
     return {
-      index: i,
+      index,
+      offset: fix.length,
+      actual: fix,
+      expected: rule.text,
+      message: `auto-ruby: ${fix} => ${rule.text}`,
+    };
+  });
+
+  match = rubyRegExp(rule).exec(text);
+  if (match) {
+    ret.push({
+      index: match.index,
       offset: rule.text.length,
       actual: rule.text,
       expected: fix,
       message: `auto-ruby: ${rule.text} => ${fix}`,
-    };
-  });
+    });
+  }
+
+  return ret;
 }
 
 function ruleAll(text: string, rule: RuleItem): Change[] {
   const re = rubyRegExp(rule);
   const matchIndices = [];
   let match;
-  // eslint-disable-next-line no-constant-condition
   while ((match = re.exec(text))) {
     matchIndices.push(match.index);
   }
 
-  const fix = fixString(rule.text, rule);
+  const fix = fixString(rule);
   return matchIndices.map((index) => {
     return {
       index,
@@ -159,14 +164,13 @@ function ruleAll(text: string, rule: RuleItem): Change[] {
   });
 }
 
-function fixString(base: string, rule: RuleItem): string {
+function fixString(rule: RuleItem): string {
   const format: ?string = config.formats[rule.format || 'default'];
   if (format == null) {
     throw new Error('');
   }
 
-  const replace = format.replace(':base:', rule.text).replace(':ruby:', rule.ruby);
-  return base.replace(rule.text, replace);
+  return format.replace(':base:', rule.text).replace(':ruby:', rule.ruby);
 }
 
 function rubyRegExp(rule: RuleItem): RegExp {
@@ -185,7 +189,6 @@ function rubyRegExp(rule: RuleItem): RegExp {
     str += `(?!${escapeRegExp(rear)})`;
   }
 
-  console.log(str);
   return new RegExp(str, 'g');
 }
 

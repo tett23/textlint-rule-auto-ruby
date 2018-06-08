@@ -85,5 +85,32 @@ tester.run('rule', rule, {
         },
       ],
     },
+
+    {
+      text: 'foo, foo(bar)',
+      output: 'foo(bar), foo',
+      options: Object.assign({}, options, {
+        rules: [
+          {
+            text: 'foo',
+            ruby: 'bar',
+            rule: 'first',
+            format: 'default',
+          },
+        ],
+      }),
+      errors: [
+        {
+          message: 'auto-ruby: foo => foo(bar)',
+          line: 1,
+          column: 1,
+        },
+        {
+          message: 'auto-ruby: foo(bar) => foo',
+          line: 1,
+          column: 6,
+        },
+      ],
+    },
   ],
 });
