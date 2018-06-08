@@ -10,7 +10,6 @@ const options: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yml`,
 
 const tester = new TextLintTester();
 
-// ruleName, rule, { valid, invalid }
 tester.run('rule', rule, {
   valid: ['text'],
 
@@ -109,6 +108,27 @@ tester.run('rule', rule, {
           message: 'auto-ruby: `foo(bar)` => `foo`',
           line: 1,
           column: 6,
+        },
+      ],
+    },
+    {
+      text: 'foo, foo',
+      output: 'foo(bar), foo',
+      options: Object.assign({}, options, {
+        rules: [
+          {
+            text: 'foo',
+            ruby: 'bar',
+            rule: 'first',
+            format: 'default',
+          },
+        ],
+      }),
+      errors: [
+        {
+          message: 'auto-ruby: `foo` => `foo(bar)`',
+          line: 1,
+          column: 1,
         },
       ],
     },
