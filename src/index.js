@@ -6,8 +6,13 @@ import type { Config, RuleItem, RuleTypes } from './types';
 
 let config: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../config/rules.yml`, 'utf8'));
 
-// eslint-disable-next-line flowtype/no-weak-types
-function reporter(context: any, options: any = {}) {
+/* eslint-disable flowtype/no-weak-types */
+type RuleError = any;
+type TextLintContext = any;
+type TextLintOptions = any;
+/* eslint-enable flowtype/no-weak-types */
+
+function reporter(context: TextLintContext, options: TextLintOptions = {}) {
   config = Object.assign({}, config, options);
   const baseRule: { rule: ?RuleTypes, format: ?string } = {
     rule: config.global.rule,
@@ -50,11 +55,7 @@ function changes(text: string, rules: RuleItem[]): Change[] {
   });
 }
 
-// eslint-disable-next-line flowtype/no-weak-types
-type RuleError = any;
-
-// eslint-disable-next-line flowtype/no-weak-types
-function applyChanges(text: string, changeItems: Change[], context: any): RuleError[] {
+function applyChanges(text: string, changeItems: Change[], context: TextLintContext): RuleError[] {
   // eslint-disable-next-line no-shadow
   const { RuleError, fixer } = context;
 
