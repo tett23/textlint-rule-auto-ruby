@@ -15,6 +15,18 @@
     "test": "NODE_ENV=test jest",
     "test-watch": "NODE_ENV=test jest --watch"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tett23/textlint-rule-auto-ruby.git"
+  },
+  "homepage": "https://github.com/tett23/textlint-rule-auto-ruby",
+  "author": {
+    "name": "tett23",
+    "email": "tett23@gmail.com"
+  },
+  "keywords": [
+    "textlint"
+  ],
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.1",
