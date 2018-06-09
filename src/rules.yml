@@ -1,0 +1,15 @@
+global:
+  message: 'hogehoge'
+  rule: all_files # all_files | file | paragraph | first | off
+  format: simple
+
+formats:
+  simple: ':base:（:ruby:）'
+  complex: '|:base:《:ruby:》'
+
+rules:
+  -
+    text: foo
+    ruby: ruby_foo
+    rule: all_files
+    format: simple
