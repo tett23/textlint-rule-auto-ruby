@@ -1,12 +1,5 @@
-global:
-  message: 'hogehoge'
-  rule: all_files # all_files | file | paragraph | first | off
-  format: simple
-
 formats:
   default: ':base:(:ruby:)'
-  simple: ':base:（:ruby:）'
-  complex: '|:base:《:ruby:》'
 
 rules:
   -
