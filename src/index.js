@@ -36,6 +36,7 @@ function reporter(context: TextLintContext, options: TextLintOptions = {}) {
 }
 
 type Change = {|
+  type: 'base' | 'ruby',
   index: number,
   actual: string,
   expected: string,
@@ -93,45 +94,63 @@ function matchAll(text: string, rule: RuleItem): Change[] {
 }
 
 function ruleFirst(text: string, rule: RuleItem): Change[] {
-  const matchIndices = [];
-  const fix = fixString(rule);
-  const re = new RegExp(escapeRegExp(fix), 'g');
-  let match;
-  while ((match = re.exec(text))) {
-    matchIndices.push(match.index);
+  let items = matches(text, rule);
+  if (items.length === 0) {
+    return [];
   }
 
-  const ret = matchIndices.map((index) => {
+  let firstItem = [];
+  if (items[0].type === 'base') {
+    items = items.slice(1);
+  } else {
+    firstItem = [items[0]];
+    items = items.slice(1);
+  }
+
+  return firstItem.concat(items.filter((item) => item.type === 'base'));
+}
+
+function ruleAll(text: string, rule: RuleItem): Change[] {
+  return matches(text, rule).filter((item) => item.type === 'ruby');
+}
+
+function matches(text: string, rule: RuleItem): Change[] {
+  return baseMatches(text, rule)
+    .concat(rubyMatches(text, rule))
+    .sort((a, b) => a.index - b.index);
+}
+
+function baseMatches(text: string, rule: RuleItem): Change[] {
+  const fix = fixString(rule);
+  const re = new RegExp(escapeRegExp(fix), 'g');
+  const indices = [];
+  let match;
+  while ((match = re.exec(text))) {
+    indices.push(match.index);
+  }
+
+  return indices.map((index) => {
     return {
+      type: 'base',
       index,
       actual: fix,
       expected: rule.text,
     };
   });
-
-  match = rubyRegExp(rule).exec(text);
-  if (match) {
-    ret.push({
-      index: match.index,
-      actual: rule.text,
-      expected: fix,
-    });
-  }
-
-  return ret;
 }
 
-function ruleAll(text: string, rule: RuleItem): Change[] {
+function rubyMatches(text: string, rule: RuleItem): Change[] {
   const re = rubyRegExp(rule);
-  const matchIndices = [];
+  const indices = [];
   let match;
   while ((match = re.exec(text))) {
-    matchIndices.push(match.index);
+    indices.push(match.index);
   }
 
   const fix = fixString(rule);
-  return matchIndices.map((index) => {
+  return indices.map((index) => {
     return {
+      type: 'ruby',
       index,
       actual: rule.text,
       expected: fix,
