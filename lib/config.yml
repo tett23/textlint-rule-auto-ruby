@@ -1,0 +1,9 @@
+global:
+  rule: all # all | first | off
+  format: default
+
+formats:
+  default: ':base:(:ruby:)'
+
+rules:
+  -
