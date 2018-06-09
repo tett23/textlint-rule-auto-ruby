@@ -10,7 +10,6 @@
   "plugins": ["add-module-exports"],
   "env": {
     "production": {
-      "plugins": ["babel-plugin-dev-expression"]
     },
     "development": {
       "plugins": [
