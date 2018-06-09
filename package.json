@@ -1,5 +1,6 @@
 {
   "name": "textlint-rule-auto-ruby",
+  "description": "textlint plugin for automatically attach ruby",
   "version": "0.1.0",
   "main": "lib/index.js",
   "files": [
