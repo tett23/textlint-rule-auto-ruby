@@ -1,14 +1,15 @@
-formats:
-  default: ':base:(:ruby:)'
+config:
+  formats:
+    default: ':base:(:ruby:)'
 
-rules:
-  -
-    text: foo
-    ruby: bar
-    rule: all
-    format: default
-  -
-    text: hoge
-    ruby: fuga
-    rule: all
-    format: default
+  rules:
+    -
+      text: foo
+      ruby: bar
+      rule: all
+      format: default
+    -
+      text: hoge
+      ruby: fuga
+      rule: all
+      format: default

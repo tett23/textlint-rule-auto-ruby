@@ -4,16 +4,22 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import type { Config, RuleItem, RuleTypes } from './types';
 
-let config: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../config/rules.yml`, 'utf8'));
+let config: Config = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yml`, 'utf8'));
 
 /* eslint-disable flowtype/no-weak-types */
 type RuleError = any;
 type TextLintContext = any;
-type TextLintOptions = any;
 /* eslint-enable flowtype/no-weak-types */
 
+type TextLintOptions = {
+  configPath?: string,
+  config?: Config,
+};
+
 function reporter(context: TextLintContext, options: TextLintOptions = {}) {
-  config = Object.assign({}, config, options);
+  const { Syntax, report, getSource } = context;
+
+  config = mergeConfig(options);
   const baseRule: { rule: ?RuleTypes, format: ?string } = {
     rule: config.global.rule,
     format: config.global.format,
@@ -21,8 +27,6 @@ function reporter(context: TextLintContext, options: TextLintOptions = {}) {
   const rules = config.rules.map((rule) => {
     return Object.assign({}, baseRule, rule);
   });
-
-  const { Syntax, report, getSource } = context;
 
   return {
     [Syntax.Document](node) {
@@ -33,6 +37,15 @@ function reporter(context: TextLintContext, options: TextLintOptions = {}) {
       });
     },
   };
+}
+
+function mergeConfig(options: TextLintOptions = {}) {
+  let userConfig = {};
+  if (options.configPath) {
+    userConfig = yaml.safeLoad(fs.readFileSync(options.configPath), 'utf8');
+  }
+
+  return Object.assign({}, config, options.config || {}, userConfig);
 }
 
 type Change = {|

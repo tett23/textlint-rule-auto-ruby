@@ -1,6 +1,5 @@
 global:
-  message: 'hogehoge'
-  rule: all_files # all | first | off
+  rule: all # all | first | off
   format: default
 
 formats:

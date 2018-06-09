@@ -17,14 +17,16 @@ tester.run('rule', rule, {
       text: 'rule: all. foo(bar), foo',
       output: 'rule: all. foo(bar), foo',
       options: Object.assign({}, options, {
-        rules: [
-          {
-            text: 'foo',
-            ruby: 'bar',
-            rule: 'first',
-            format: 'default',
-          },
-        ],
+        config: {
+          rules: [
+            {
+              text: 'foo',
+              ruby: 'bar',
+              rule: 'first',
+              format: 'default',
+            },
+          ],
+        },
       }),
     },
   ],
@@ -105,14 +107,16 @@ tester.run('rule', rule, {
       text: 'rule: first. foo, foo(bar)',
       output: 'rule: first. foo(bar), foo',
       options: Object.assign({}, options, {
-        rules: [
-          {
-            text: 'foo',
-            ruby: 'bar',
-            rule: 'first',
-            format: 'default',
-          },
-        ],
+        config: {
+          rules: [
+            {
+              text: 'foo',
+              ruby: 'bar',
+              rule: 'first',
+              format: 'default',
+            },
+          ],
+        },
       }),
       errors: [
         {
@@ -131,14 +135,16 @@ tester.run('rule', rule, {
       text: 'rule: first. foo, foo',
       output: 'rule: first. foo(bar), foo',
       options: Object.assign({}, options, {
-        rules: [
-          {
-            text: 'foo',
-            ruby: 'bar',
-            rule: 'first',
-            format: 'default',
-          },
-        ],
+        config: {
+          rules: [
+            {
+              text: 'foo',
+              ruby: 'bar',
+              rule: 'first',
+              format: 'default',
+            },
+          ],
+        },
       }),
       errors: [
         {
@@ -152,14 +158,16 @@ tester.run('rule', rule, {
       text: 'rule: first. foo(bar), foo, foo(bar)',
       output: 'rule: first. foo(bar), foo, foo',
       options: Object.assign({}, options, {
-        rules: [
-          {
-            text: 'foo',
-            ruby: 'bar',
-            rule: 'first',
-            format: 'default',
-          },
-        ],
+        config: {
+          rules: [
+            {
+              text: 'foo',
+              ruby: 'bar',
+              rule: 'first',
+              format: 'default',
+            },
+          ],
+        },
       }),
       errors: [
         {
