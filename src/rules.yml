@@ -4,6 +4,7 @@ global:
   format: simple
 
 formats:
+  default: ':base:(:ruby:)'
   simple: ':base:（:ruby:）'
   complex: '|:base:《:ruby:》'
 
